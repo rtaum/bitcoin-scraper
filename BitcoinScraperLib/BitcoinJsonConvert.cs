@@ -5,40 +5,31 @@ using System.Linq;
 
 namespace BitcoinScraperLib
 {
-    public class BitcoinJsonConvert
+    internal class BitcoinJsonConvert
     {
         public int GetBlocksCount(string content)
         {
-            return ParseValue<int>(content, "blocks");
+            var parsedResponse = JObject.Parse(content);
+            return parsedResponse["info"].Value<int>("blocks");
         }
 
         public string GetBlocksHash(string content)
         {
-            return ParseValue<string>(content, "blockHash");
+            var parsedResponse = JObject.Parse(content);
+            return parsedResponse.Value<string>("blockHash");
         }
 
         public IEnumerable<string> GetTransactionHashes(string content)
         {
-            return ParseValues<string>(content, "tx");
+            var parsedResponse = JObject.Parse(content);
+            return parsedResponse.GetValue("tx").
+                Children().
+                Select(t => t.Value<string>());
         }
 
         public Transaction GetTransaction(string content)
         {
             return JsonConvert.DeserializeObject<Transaction>(content);
-        }
-
-        private T ParseValue<T>(string responseData, string propertyName)
-        {
-            var parsedResponse = JObject.Parse(responseData);
-            return parsedResponse.Value<T>(propertyName);
-        }
-
-        private IEnumerable<T> ParseValues<T>(string responseData, string propertyName)
-        {
-            var parsedResponse = JObject.Parse(responseData);
-            return parsedResponse.GetValue(propertyName).
-                Children().
-                Select(t => t.Value<T>());
         }
     }
 }

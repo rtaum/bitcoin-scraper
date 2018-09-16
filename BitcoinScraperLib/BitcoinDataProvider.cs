@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BitcoinScraperLib
@@ -30,19 +29,14 @@ namespace BitcoinScraperLib
 
         public async Task<IEnumerable<string>> GetTransactionHashes(string hash)
         {
-            var content = await _bitcoinHttpClient.GetTransactionContent(hash);
+            var content = await _bitcoinHttpClient.GetTransactionHashesContent(hash);
             return _bitcoinJsonConvert.GetTransactionHashes(content);
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactions(IEnumerable<string> hashes)
+        public async Task<Transaction> GetTransaction(string transactionHash)
         {
-            var transactions = hashes.Select(async h =>
-            {
-                var hashContent = await _bitcoinHttpClient.GetTransactionContent(h);
-                return _bitcoinJsonConvert.GetTransaction(hashContent);
-            });
-
-            return await Task.WhenAll(transactions);
+            var transactionDetails = await _bitcoinHttpClient.GetTransactionContent(transactionHash);
+            return _bitcoinJsonConvert.GetTransaction(transactionDetails);
         }
     }
 }

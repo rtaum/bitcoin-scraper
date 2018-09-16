@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BitcoinScraperLib.DbAccess
+namespace BitcoinScraperDatabase.Models
 {
-    [Table("Vout")]
+    [Table("VOut")]
     public class VOutModel : VModel
     {
     }

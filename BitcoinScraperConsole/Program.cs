@@ -1,5 +1,4 @@
-﻿using BitcoinScraperLib;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace BitcoinScraperConsole
@@ -8,12 +7,10 @@ namespace BitcoinScraperConsole
     {
         static async Task Main(string[] args)
         {
-            var bitcoinClient = new BitcoinDataProvider();
-            var count = await bitcoinClient.GetBlocksCount();
-            var hash = await bitcoinClient.GetBlocksHash(count - 1);
-            var transactionHashes = await bitcoinClient.GetTransactionHashes(hash);
-            var transactions = await bitcoinClient.GetTransactions(transactionHashes);
-            Console.WriteLine("Hello World!");
+            BitcoinDataPipeline pipeline = new BitcoinDataPipeline();
+            await pipeline.StartProcessingAsync(1);
+            await pipeline.CompleteAsync();
+            Console.WriteLine("Loading the bitcoin data has finished");
         }
     }
 }
